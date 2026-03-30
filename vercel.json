@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/fetch-prices",
+      "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/fetch-cpi",
+      "schedule": "0 8 15 * *"
+    }
+  ]
+}
