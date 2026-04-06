@@ -1,4 +1,5 @@
 import { ProductCard } from "@/components/product-card";
+import { prisma } from "@/lib/db";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -25,14 +26,41 @@ interface BrowsePageProps {
 }
 
 async function getBrowseData(category?: string) {
-  const baseUrl = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : "http://localhost:3000";
-  const url = category
-    ? `${baseUrl}/api/products/browse?category=${encodeURIComponent(category)}`
-    : `${baseUrl}/api/products/browse`;
-  const res = await fetch(url, { cache: "no-store" });
-  return res.json();
+  const products = await prisma.product.findMany({
+    where: category ? { category } : undefined,
+    include: {
+      prices: {
+        orderBy: { date: "desc" },
+        take: 1,
+      },
+    },
+    orderBy: [{ searchCount: "desc" }, { name: "asc" }],
+  });
+
+  const allProducts = await prisma.product.groupBy({
+    by: ["category"],
+    _count: { id: true },
+    orderBy: { _count: { id: "desc" } },
+  });
+
+  const categories = allProducts
+    .filter((c) => c.category != null)
+    .map((c) => ({ name: c.category!, count: c._count.id }));
+
+  return {
+    products: products.map((p) => ({
+      ean: p.ean,
+      name: p.name,
+      brand: p.brand,
+      vendor: p.vendor,
+      imageUrl: p.imageUrl,
+      category: p.category,
+      currentPrice: p.prices[0] ? Number(p.prices[0].price) : null,
+      chain: p.prices[0]?.chain ?? null,
+    })),
+    categories,
+    selectedCategory: category,
+  };
 }
 
 export default async function BrowsePage({ searchParams }: BrowsePageProps) {
