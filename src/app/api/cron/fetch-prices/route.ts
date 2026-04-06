@@ -9,9 +9,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const products = await prisma.product.findMany({ select: { id: true, ean: true } });
-  const eans = products.map((p) => p.ean);
-  const eanToId = Object.fromEntries(products.map((p) => [p.ean, p.id]));
+  const products: { id: number; ean: string }[] = await prisma.product.findMany({ select: { id: true, ean: true } });
+  const eans = products.map((p: { ean: string }) => p.ean);
+  const eanToId = Object.fromEntries(products.map((p: { ean: string; id: number }) => [p.ean, p.id]));
 
   let totalSaved = 0;
   for (let i = 0; i < eans.length; i += 100) {
