@@ -31,7 +31,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-8 pt-4 border-t border-border/50 text-center text-text-muted text-xs">
-          Billigst.no — Laget i Norge
+          Billigst.no — Laget i Norge — <a href="mailto:kontakt@billigst.no" className="hover:text-white transition-colors underline">kontakt@billigst.no</a>
         </div>
       </div>
     </footer>

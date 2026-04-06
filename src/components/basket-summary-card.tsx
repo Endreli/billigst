@@ -30,7 +30,9 @@ export function BasketSummaryCard({
         <div className="text-right">
           <div className="text-primary text-xl font-bold tabular-nums">{formatKr(cheapestTotal)}</div>
           {savingsAmount > 0 && (
-            <div className="text-primary/70 text-[13px]">Spar {formatKr(savingsAmount)}</div>
+            <div className="mt-1 inline-flex items-center gap-1 bg-primary/15 text-primary text-[13px] font-semibold px-2.5 py-0.5 rounded-full">
+              Du sparer {formatKr(savingsAmount)}
+            </div>
           )}
         </div>
       </div>
@@ -42,14 +44,16 @@ export function BasketSummaryCard({
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
             <circle cx="12" cy="10" r="3" />
           </svg>
-          <span className="truncate">
+          <span className="truncate flex-1">
             {storeName && storeName !== cheapestChain ? storeName : `Nærmeste ${cheapestChain}`}
             {storeAddress && ` · ${storeAddress}`}
           </span>
           {distanceKm != null && (
-            <span className="flex-shrink-0 font-medium text-white">
+            <span className="flex-shrink-0 inline-flex items-center gap-1.5 bg-surface-hover px-2 py-0.5 rounded-md font-medium text-white">
               {distanceKm} km
-              {durationMin != null && ` · ${durationMin} min`}
+              {durationMin != null && (
+                <span className="text-text-muted">· {durationMin} min</span>
+              )}
             </span>
           )}
         </div>

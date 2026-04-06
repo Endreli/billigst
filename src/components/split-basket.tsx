@@ -35,9 +35,9 @@ export function SplitBasket({ totalOptimized, savingsVsSingleStore, assignments,
         className="w-full p-5 flex items-center justify-between hover:bg-surface-hover transition-colors active:scale-[0.99]"
       >
         <div className="flex items-center gap-3">
-          <span className="text-xl">🧠</span>
+          <span className="text-xl">✂️</span>
           <div className="text-left">
-            <div className="text-white font-medium text-[15px]">Smart handletur</div>
+            <div className="text-white font-medium text-[15px]">Spar mer med flere butikker</div>
             <div className="text-primary text-[13px]">
               Spar {formatKr(savingsVsSingleStore)} ekstra ved å handle på {storeVisits.length} butikker
             </div>

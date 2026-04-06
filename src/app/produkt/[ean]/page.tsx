@@ -2,7 +2,7 @@ import { PriceChart } from "@/components/price-chart";
 import { StorePrices } from "@/components/store-prices";
 import { AddToBasketButton } from "@/components/add-to-basket-button";
 import { BackButton } from "@/components/back-button";
-import { formatKr } from "@/lib/format";
+import { formatKr, formatDate } from "@/lib/format";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
@@ -157,11 +157,24 @@ export default async function ProductPage({ params }: ProductPageProps) {
       <PriceChart ean={ean} />
 
       {product.latestPrices.length > 0 && (
-        <StorePrices
-          prices={product.latestPrices.map((p: any) => ({
-            chain: p.chain, price: Number(p.price), date: p.date,
-          }))}
-        />
+        <>
+          <StorePrices
+            prices={product.latestPrices.map((p: any) => ({
+              chain: p.chain, price: Number(p.price), date: p.date,
+            }))}
+          />
+          {(() => {
+            const dates = product.latestPrices.map((p: any) => p.date).filter(Boolean);
+            const latest = dates.length > 0
+              ? dates.sort((a: string, b: string) => new Date(b).getTime() - new Date(a).getTime())[0]
+              : null;
+            return latest ? (
+              <p className="text-text-muted text-[12px] text-center -mt-3">
+                Priser oppdatert {formatDate(latest)}
+              </p>
+            ) : null;
+          })()}
+        </>
       )}
     </div>
   );

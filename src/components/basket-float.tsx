@@ -42,10 +42,11 @@ export function BasketFloat() {
     <div className="fixed bottom-24 sm:bottom-6 left-4 right-4 z-40 max-w-lg mx-auto animate-slide-up">
       <Link
         href="/handlekurv"
-        className="flex items-center justify-between bg-primary hover:bg-primary-hover text-white rounded-2xl px-5 py-4 shadow-xl shadow-primary/20 transition-all active:scale-[0.98]"
+        aria-label={`Se handlekurv med ${itemCount} ${itemCount === 1 ? "vare" : "varer"}${cheapest ? `, billigst hos ${cheapest.chain} for ${formatKr(cheapest.total)}` : ""}`}
+        className="flex items-center justify-between bg-primary hover:bg-primary-hover text-white rounded-2xl px-5 py-4 min-h-[56px] shadow-xl shadow-primary/25 transition-all active:scale-[0.98]"
       >
         <div className="flex items-center gap-3">
-          <div className="bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center">
+          <div className="bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center" aria-hidden="true">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="9" cy="21" r="1" />
               <circle cx="20" cy="21" r="1" />
@@ -54,7 +55,7 @@ export function BasketFloat() {
           </div>
           <div>
             <div className="text-[15px] font-semibold">Se handlekurv</div>
-            <div className="text-green-200 text-[13px]">{itemCount} varer</div>
+            <div className="text-green-200 text-[13px]">{itemCount} {itemCount === 1 ? "vare" : "varer"}</div>
           </div>
         </div>
         {cheapest && (

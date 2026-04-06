@@ -27,22 +27,28 @@ export default async function HomePage() {
     <div className="space-y-6">
       {/* Hero — search first */}
       <div className="text-center pt-6 pb-1">
-        <p className="text-xl font-semibold text-white mb-5">
-          Finn den billigste butikken for handlelisten din
+        <h1 className="text-3xl font-bold text-white mb-1">
+          Spar penger på mathandelen
+        </h1>
+        <p className="text-[15px] text-text-muted mb-5">
+          Sammenlign priser fra alle norske dagligvarekjeder
         </p>
         <div className="max-w-lg mx-auto">
           <SearchBar />
         </div>
-        <div className="flex gap-2 justify-center mt-4 flex-wrap">
-          {["Grandiosa", "Melk", "Kvikk Lunsj", "Norvegia", "Egg"].map((term) => (
-            <a
-              key={term}
-              href={`/sok?q=${encodeURIComponent(term)}`}
-              className="bg-surface-hover border border-border px-4 py-2.5 rounded-full text-[13px] text-text-muted hover:text-white hover:border-primary/30 transition-colors active:scale-95"
-            >
-              {term}
-            </a>
-          ))}
+        <div className="mt-4 space-y-1.5">
+          <p className="text-[11px] text-text-muted uppercase tracking-wider">Populære søk</p>
+          <div className="flex gap-2 justify-center flex-wrap">
+            {["Grandiosa", "Melk", "Kvikk Lunsj", "Norvegia", "Egg"].map((term) => (
+              <a
+                key={term}
+                href={`/sok?q=${encodeURIComponent(term)}`}
+                className="bg-surface-hover border border-border px-4 py-2.5 rounded-full text-[13px] text-text-muted hover:text-white hover:border-primary/30 transition-colors active:scale-95"
+              >
+                {term}
+              </a>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -63,7 +69,7 @@ export default async function HomePage() {
           <div className="flex-1">
             <div className="text-white font-semibold text-[15px]">Sammenlign handlekurven din</div>
             <div className="text-text-muted text-[13px] mt-0.5">
-              Legg til varer og finn den billigste butikken
+              Legg til varer og se hvilken butikk som er billigst
             </div>
           </div>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b92a8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:translate-x-1 transition-transform flex-shrink-0">
@@ -72,9 +78,31 @@ export default async function HomePage() {
         </div>
       </Link>
 
-      {/* Quick add popular products */}
+      {/* How it works */}
+      <div className="bg-surface rounded-card p-5">
+        <h3 className="text-[13px] text-text-muted uppercase tracking-wider mb-4">Slik fungerer det</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {[
+            { step: 1, title: "Søk og legg til varer", desc: "Finn produktene du trenger i handlekurven din" },
+            { step: 2, title: "Vi sammenligner priser", desc: "Prisene sjekkes mot alle norske dagligvarekjeder" },
+            { step: 3, title: "Se billigste butikk", desc: "Du får oversikt over hvor du sparer mest" },
+          ].map((item) => (
+            <div key={item.step} className="flex md:flex-col items-start md:items-center gap-3 md:text-center">
+              <div className="w-9 h-9 rounded-full bg-primary/15 text-primary font-bold text-sm flex items-center justify-center flex-shrink-0">
+                {item.step}
+              </div>
+              <div>
+                <div className="text-white text-[14px] font-medium">{item.title}</div>
+                <div className="text-text-muted text-[13px] mt-0.5">{item.desc}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Popular products */}
       <div className="bg-surface rounded-card p-5 space-y-3">
-        <h3 className="text-[13px] text-text-muted uppercase tracking-wider">Legg til raskt</h3>
+        <h3 className="text-[13px] text-text-muted uppercase tracking-wider">Populære varer</h3>
         <PopularProducts />
       </div>
 
@@ -82,7 +110,7 @@ export default async function HomePage() {
         <>
           <div className="grid grid-cols-2 gap-3">
             <StatCard
-              label="Mest økt (30d)"
+              label="Størst prisøkning"
               value={trendingData.trending[0] ? `+${trendingData.trending[0].change.toFixed(0)} kr` : "--"}
             />
             <StatCard

@@ -104,7 +104,7 @@ export function BasketSearch() {
             if (results.length > 0) setOpen(true);
           }}
           onKeyDown={handleKeyDown}
-          placeholder="Legg til varer i handlekurven..."
+          placeholder="Søk etter varer..."
           className="bg-transparent flex-1 text-white placeholder-text-muted outline-none text-[15px]"
         />
         {loading && (

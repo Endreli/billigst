@@ -12,3 +12,12 @@ export function formatKr(amount: number): string {
 export function formatPercent(value: number): string {
   return value.toFixed(1) + "%";
 }
+
+export function formatDate(dateStr: string): string {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString("no-NO", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}

@@ -44,12 +44,19 @@ export function PriceChart({ ean, initialPeriod = "1y" }: PriceChartProps) {
     fetchData(p);
   }
 
-  if (!data || loading) {
+  if (loading) {
     return (
       <div className="bg-surface rounded-card p-5 h-80 flex items-center justify-center">
-        <span className="text-text-muted">Laster prishistorikk...</span>
+        <div className="text-center space-y-3">
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+          <span className="text-text-muted text-[14px]">Laster prishistorikk...</span>
+        </div>
       </div>
     );
+  }
+
+  if (!data) {
+    return null;
   }
 
   const chartMap = new Map<string, { date: string; price: number }>();
@@ -65,15 +72,32 @@ export function PriceChart({ ean, initialPeriod = "1y" }: PriceChartProps) {
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
 
+  if (chartData.length === 0) {
+    return (
+      <div className="bg-surface rounded-card p-5 h-60 flex items-center justify-center">
+        <div className="text-center space-y-2">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#8b92a8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto" aria-hidden="true">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+          </svg>
+          <p className="text-text-muted text-[14px]">Ingen prishistorikk enn&aring;</p>
+          <p className="text-text-muted text-[12px]">Vi samler inn priser daglig, sjekk tilbake snart!</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-surface rounded-card p-5">
+    <section aria-label="Prishistorikk" className="bg-surface rounded-card p-5">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-white font-semibold text-[15px]">Prishistorikk</h3>
-        <div className="flex gap-1">
+        <div className="flex gap-1" role="group" aria-label="Velg tidsperiode">
           {PERIODS.map((p) => (
             <button key={p.key} onClick={() => handlePeriodChange(p.key)}
-              className={`px-4 py-2 min-w-[44px] text-[13px] rounded-xl transition-colors active:scale-95 ${
-                period === p.key ? "bg-primary text-white" : "bg-surface-hover text-text-muted hover:text-white"
+              aria-pressed={period === p.key}
+              className={`px-4 py-2 min-w-[44px] min-h-[44px] text-[13px] rounded-xl transition-colors active:scale-95 font-medium ${
+                period === p.key
+                  ? "bg-primary text-white shadow-sm shadow-primary/25"
+                  : "bg-surface-hover text-text-muted hover:text-white"
               }`}>
               {p.label}
             </button>
@@ -86,16 +110,19 @@ export function PriceChart({ ean, initialPeriod = "1y" }: PriceChartProps) {
             tickFormatter={(d) => format(parseISO(d), "MMM yy", { locale: nb })}
             axisLine={{ stroke: "#2a2f3d" }} tickLine={false} />
           <YAxis tick={{ fill: "#8b92a8", fontSize: 11 }} tickFormatter={(v) => `${v} kr`}
-            axisLine={false} tickLine={false} />
-          <Tooltip contentStyle={{ background: "#181b23", border: "1px solid #2a2f3d", borderRadius: 12, color: "#fff" }}
+            axisLine={false} tickLine={false} width={55} />
+          <Tooltip
+            contentStyle={{ background: "#181b23", border: "1px solid #2a2f3d", borderRadius: 12, color: "#fff", padding: "10px 14px" }}
+            labelStyle={{ color: "#8b92a8", fontSize: 12, marginBottom: 4 }}
             labelFormatter={(d) => format(parseISO(d as string), "d. MMMM yyyy", { locale: nb })}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             formatter={(value: any) => [
               value != null ? `${Number(value).toLocaleString("no-NO", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} kr` : "", "Pris",
-            ]} />
-          <Line type="monotone" dataKey="price" stroke="#22c55e" strokeWidth={2.5} dot={false} connectNulls />
+            ]}
+          />
+          <Line type="monotone" dataKey="price" stroke="#22c55e" strokeWidth={2.5} dot={false} connectNulls activeDot={{ r: 5, fill: "#22c55e", stroke: "#fff", strokeWidth: 2 }} />
         </LineChart>
       </ResponsiveContainer>
-    </div>
+    </section>
   );
 }

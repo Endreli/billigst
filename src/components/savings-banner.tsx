@@ -46,11 +46,11 @@ export function SavingsBanner({
       <div className="flex items-start justify-between mb-5">
         <div>
           <div className="text-primary text-4xl font-bold tabular-nums tracking-tight">
-            Spar {formatKr(animatedAmount)}
+            Du sparer {formatKr(animatedAmount)}
           </div>
           <div className="text-text-muted text-[15px] mt-1.5">
             ved å handle på <span className="text-white font-medium">{cheapestChain}</span>{" "}
-            istedenfor {mostExpensiveChain}
+            istedenfor <span className="text-white font-medium">{mostExpensiveChain}</span>
           </div>
         </div>
         <div className="bg-primary/15 text-primary text-[15px] font-bold px-3 py-2 rounded-xl flex-shrink-0">
@@ -60,7 +60,7 @@ export function SavingsBanner({
 
       <div className="space-y-2.5">
         <div className="flex items-center gap-3">
-          <span className="text-[13px] text-text-muted w-24 flex-shrink-0 truncate">{cheapestChain}</span>
+          <span className="text-[13px] text-white font-medium w-24 flex-shrink-0 truncate">{cheapestChain}</span>
           <div className="flex-1 bg-surface-hover rounded-full h-7 overflow-hidden">
             <div
               className="bg-primary h-full rounded-full transition-all duration-1000 ease-out flex items-center justify-end pr-3"
@@ -69,6 +69,7 @@ export function SavingsBanner({
               <span className="text-[11px] font-bold text-white">{formatKr(cheapestTotal)}</span>
             </div>
           </div>
+          <span className="text-[11px] text-primary font-semibold flex-shrink-0">Billigst</span>
         </div>
         <div className="flex items-center gap-3">
           <span className="text-[13px] text-text-muted w-24 flex-shrink-0 truncate">{mostExpensiveChain}</span>
@@ -80,6 +81,7 @@ export function SavingsBanner({
               <span className="text-[11px] font-bold text-white">{formatKr(mostExpensiveTotal)}</span>
             </div>
           </div>
+          <span className="text-[11px] text-red-400 font-semibold flex-shrink-0">Dyrest</span>
         </div>
       </div>
     </div>

@@ -45,8 +45,18 @@ export default function HandlekurvPage() {
   const [data, setData] = useState<CalculateResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [confirmClear, setConfirmClear] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const confirmTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  // Reset confirm state after 3 seconds
+  useEffect(() => {
+    if (confirmClear) {
+      confirmTimerRef.current = setTimeout(() => setConfirmClear(false), 3000);
+      return () => { if (confirmTimerRef.current) clearTimeout(confirmTimerRef.current); };
+    }
+  }, [confirmClear]);
 
   // Location & nearby stores
   const { lat, lng, refresh: refreshLocation } = useLocation();
@@ -155,8 +165,22 @@ export default function HandlekurvPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">Handlekurv</h1>
         {!isEmpty && (
-          <button onClick={clearBasket} className="text-[13px] text-text-muted hover:text-red-400 transition-colors py-2 px-3 -mr-3 active:scale-95">
-            Tom kurven
+          <button
+            onClick={() => {
+              if (confirmClear) {
+                clearBasket();
+                setConfirmClear(false);
+              } else {
+                setConfirmClear(true);
+              }
+            }}
+            className={`text-[13px] transition-colors py-2 px-3 -mr-3 active:scale-95 rounded-lg ${
+              confirmClear
+                ? "bg-red-500/15 text-red-400 font-medium"
+                : "text-text-muted hover:text-red-400"
+            }`}
+          >
+            {confirmClear ? "Er du sikker?" : "Tom kurven"}
           </button>
         )}
       </div>
@@ -283,7 +307,7 @@ export default function HandlekurvPage() {
                     </svg>
                   </div>
                   <div className="text-left flex-1">
-                    <div className="text-white text-[14px] font-medium">Regn med kjørekostnader?</div>
+                    <div className="text-white text-[14px] font-medium">Inkluder kjørekostnader?</div>
                     <div className="text-text-muted text-[12px]">Se hva som er billigst inkl. drivstoff og bom</div>
                   </div>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b92a8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

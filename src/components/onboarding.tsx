@@ -7,33 +7,33 @@ const STORAGE_KEY = "billigst-onboarded";
 const STEPS = [
   {
     icon: (
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <circle cx="11" cy="11" r="8" />
         <line x1="21" y1="21" x2="16.65" y2="16.65" />
       </svg>
     ),
-    title: "Søk etter varer",
-    description: "Finn produktene du skal handle — vi har tusenvis av dagligvarer.",
+    title: "Finn varene dine",
+    description: "Søk blant tusenvis av dagligvarer fra norske butikker. Bare skriv inn hva du leter etter.",
   },
   {
     icon: (
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <circle cx="9" cy="21" r="1" />
         <circle cx="20" cy="21" r="1" />
         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
       </svg>
     ),
-    title: "Bygg handlelisten",
-    description: "Legg til alt du trenger. Vi sammenligner prisene automatisk.",
+    title: "Bygg handlelisten din",
+    description: "Legg til alt du trenger, så sammenligner vi prisene hos alle butikkjedene for deg.",
   },
   {
     icon: (
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
       </svg>
     ),
-    title: "Spar penger",
-    description: "Se hvilken butikk som er billigst — inkludert kjørekostnader og bom.",
+    title: "Spar penger hver uke",
+    description: "Se med en gang hvilken butikk som er billigst for akkurat din handleliste.",
   },
 ];
 
@@ -72,7 +72,7 @@ export function Onboarding() {
   const isLast = step === STEPS.length - 1;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-background/95 backdrop-blur-lg flex items-center justify-center p-6">
+    <div role="dialog" aria-modal="true" aria-label="Velkommen til Billigst" className="fixed inset-0 z-[100] bg-background/95 backdrop-blur-lg flex items-center justify-center p-6">
       <div className="max-w-sm w-full text-center space-y-8 animate-fade-in">
         {/* Logo */}
         <div className="text-2xl font-bold tracking-tight text-primary">
@@ -91,12 +91,12 @@ export function Onboarding() {
         </div>
 
         {/* Progress dots */}
-        <div className="flex gap-2 justify-center">
+        <div className="flex gap-2.5 justify-center" aria-label={`Steg ${step + 1} av ${STEPS.length}`} role="status">
           {STEPS.map((_, i) => (
             <div
               key={i}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === step ? "w-6 bg-primary" : "w-1.5 bg-border"
+              className={`h-2 rounded-full transition-all duration-300 ${
+                i === step ? "w-7 bg-primary" : i < step ? "w-2 bg-primary/40" : "w-2 bg-border"
               }`}
             />
           ))}
@@ -106,16 +106,16 @@ export function Onboarding() {
         <div className="space-y-3">
           <button
             onClick={handleNext}
-            className="w-full bg-primary text-white font-semibold py-4 rounded-2xl hover:bg-primary-hover transition-colors active:scale-[0.98] text-[15px]"
+            className="w-full bg-primary text-white font-semibold py-4 rounded-2xl hover:bg-primary-hover transition-colors active:scale-[0.98] text-[16px]"
           >
-            {isLast ? "Kom i gang" : "Neste"}
+            {isLast ? "Start handlingen!" : "Neste"}
           </button>
           {!isLast && (
             <button
               onClick={handleClose}
-              className="text-text-muted text-[13px] py-2 active:scale-95"
+              className="w-full text-text-muted hover:text-white text-[14px] py-3 rounded-xl transition-colors active:scale-95"
             >
-              Hopp over
+              Hopp over introduksjonen
             </button>
           )}
         </div>
