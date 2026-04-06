@@ -277,7 +277,7 @@ export default function HandlekurvPage() {
                   className="w-full bg-surface border border-border rounded-card p-4 flex items-center gap-3 hover:border-primary/20 transition-colors active:scale-[0.99]"
                 >
                   <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
                       <circle cx="12" cy="10" r="3" />
                     </svg>
@@ -286,7 +286,7 @@ export default function HandlekurvPage() {
                     <div className="text-white text-[14px] font-medium">Regn med kjørekostnader?</div>
                     <div className="text-text-muted text-[12px]">Se hva som er billigst inkl. drivstoff og bom</div>
                   </div>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9298ad" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b92a8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
                 </button>

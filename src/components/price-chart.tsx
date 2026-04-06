@@ -82,10 +82,10 @@ export function PriceChart({ ean, initialPeriod = "1y" }: PriceChartProps) {
       </div>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={chartData}>
-          <XAxis dataKey="date" tick={{ fill: "#9298ad", fontSize: 11 }}
+          <XAxis dataKey="date" tick={{ fill: "#8b92a8", fontSize: 11 }}
             tickFormatter={(d) => format(parseISO(d), "MMM yy", { locale: nb })}
             axisLine={{ stroke: "#2a2f3d" }} tickLine={false} />
-          <YAxis tick={{ fill: "#9298ad", fontSize: 11 }} tickFormatter={(v) => `${v} kr`}
+          <YAxis tick={{ fill: "#8b92a8", fontSize: 11 }} tickFormatter={(v) => `${v} kr`}
             axisLine={false} tickLine={false} />
           <Tooltip contentStyle={{ background: "#181b23", border: "1px solid #2a2f3d", borderRadius: 12, color: "#fff" }}
             labelFormatter={(d) => format(parseISO(d as string), "d. MMMM yyyy", { locale: nb })}
@@ -93,7 +93,7 @@ export function PriceChart({ ean, initialPeriod = "1y" }: PriceChartProps) {
             formatter={(value: any) => [
               value != null ? `${Number(value).toLocaleString("no-NO", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} kr` : "", "Pris",
             ]} />
-          <Line type="monotone" dataKey="price" stroke="#34d399" strokeWidth={2.5} dot={false} connectNulls />
+          <Line type="monotone" dataKey="price" stroke="#22c55e" strokeWidth={2.5} dot={false} connectNulls />
         </LineChart>
       </ResponsiveContainer>
     </div>

@@ -10,9 +10,9 @@ const config: Config = {
         surface: "#181b23",
         "surface-hover": "#1f2330",
         border: "#2a2f3d",
-        primary: "#34d399",
+        primary: "#22c55e",
         "primary-hover": "#16a34a",
-        "text-muted": "#9298ad",
+        "text-muted": "#8b92a8",
       },
       borderRadius: {
         card: "16px",

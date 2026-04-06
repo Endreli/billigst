@@ -21,7 +21,7 @@ export function SearchBar({ defaultValue = "" }: { defaultValue?: string }) {
   return (
     <form onSubmit={handleSubmit} role="search">
       <div className="bg-surface border border-border rounded-2xl px-5 py-4 flex items-center gap-3 focus-within:border-primary/40 focus-within:ring-1 focus-within:ring-primary/20 transition-all">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9298ad" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b92a8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <circle cx="11" cy="11" r="8" />
           <path d="m21 21-4.35-4.35" />
         </svg>

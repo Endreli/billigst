@@ -88,7 +88,7 @@ export function BasketSearch() {
   return (
     <div ref={containerRef} className="relative">
       <div className="bg-surface border border-border rounded-2xl px-5 py-4 flex items-center gap-3 focus-within:border-primary/40 focus-within:ring-1 focus-within:ring-primary/20 transition-all">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9298ad" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b92a8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <circle cx="11" cy="11" r="8" />
           <path d="m21 21-4.35-4.35" />
         </svg>
@@ -135,15 +135,15 @@ export function BasketSearch() {
                 )}
                 <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 active:scale-90 transition-transform">
                   {isAdded ? (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="animate-basket-pop">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="animate-basket-pop">
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                   ) : inBasket ? (
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9298ad" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8b92a8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                   ) : (
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <line x1="12" y1="5" x2="12" y2="19" />
                       <line x1="5" y1="12" x2="19" y2="12" />
                     </svg>

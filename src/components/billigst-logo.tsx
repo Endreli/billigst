@@ -24,7 +24,7 @@ export function BilligstLogo({
         {/* Price tag body */}
         <path
           d="M4 8a4 4 0 0 1 4-4h10.34a4 4 0 0 1 2.83 1.17l6.66 6.66a4 4 0 0 1 0 5.66l-8.17 8.17a4 4 0 0 1-5.66 0L4.83 16.5A4 4 0 0 1 4 14.34V8Z"
-          fill="#34d399"
+          fill="#22c55e"
         />
         {/* Tag hole */}
         <circle cx="10.5" cy="10.5" r="2.5" fill="white" opacity="0.9" />
