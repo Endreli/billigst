@@ -14,16 +14,18 @@ export interface KassalProduct {
   vendor: string | null;
   ean: string;
   image: string | null;
-  category: string[];
-  current_price: {
-    price: number;
-    unit_price: number | null;
-    date: string;
-    store: {
-      name: string;
-      code: string;
-    };
+  category: { id: number; name: string }[];
+  // Current price can be a number or an object depending on the endpoint
+  current_price: number | null;
+  current_unit_price: number | null;
+  store: {
+    name: string;
+    code: string;
   } | null;
+  price_history?: {
+    price: number;
+    date: string;
+  }[];
 }
 
 export interface KassalSearchResult {
@@ -78,4 +80,16 @@ export async function getPricesBulk(
   });
   if (!res.ok) throw new Error(`Kassal API error: ${res.status}`);
   return res.json();
+}
+
+/** Helper to extract price from Kassalapp product (handles both formats) */
+export function getKassalPrice(kp: KassalProduct): number | null {
+  if (typeof kp.current_price === "number") return kp.current_price;
+  return null;
+}
+
+/** Helper to extract store name from Kassalapp product */
+export function getKassalStore(kp: KassalProduct): string | null {
+  if (kp.store?.name) return kp.store.name;
+  return null;
 }

@@ -1,20 +1,29 @@
 {
   "permissions": {
     "allow": [
-      "Bash(bash \"C:/Users/endre/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.5/skills/brainstorming/scripts/start-server.sh\" --project-dir \"E:/Development/HvaKosta\")",
+      "Bash(*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "Glob(*)",
+      "Grep(*)",
       "WebSearch",
-      "WebFetch(domain:kassal.app)",
-      "WebFetch(domain:data.ssb.no)",
-      "WebFetch(domain:www.ssb.no)",
-      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --yes)",
-      "Bash(mkdir -p /e/Development/tmp-hvakosta)",
-      "Read(//e/Development/**)",
-      "Bash(npm install:*)",
-      "Bash(ls /e/Development/HvaKosta/*.ts /e/Development/HvaKosta/*.mjs)",
-      "Bash(git -C /e/Development/HvaKosta config user.email \"dev@hvakosta.no\")",
-      "Bash(git -C /e/Development/HvaKosta config user.name \"HvaKosta Dev\")",
-      "Bash(git -C /e/Development/HvaKosta add -A)",
-      "Bash(git -C /e/Development/HvaKosta status --short)"
+      "WebFetch(*)",
+      "mcp__Claude_Preview__preview_start",
+      "mcp__Claude_Preview__preview_stop",
+      "mcp__Claude_Preview__preview_screenshot",
+      "mcp__Claude_Preview__preview_snapshot",
+      "mcp__Claude_Preview__preview_eval",
+      "mcp__Claude_Preview__preview_click",
+      "mcp__Claude_Preview__preview_fill",
+      "mcp__Claude_Preview__preview_inspect",
+      "mcp__Claude_Preview__preview_console_logs",
+      "mcp__Claude_Preview__preview_logs",
+      "mcp__Claude_Preview__preview_network",
+      "mcp__Claude_Preview__preview_resize",
+      "Skill(*)",
+      "mcp__plugin_context7_context7__resolve-library-id",
+      "mcp__plugin_context7_context7__query-docs"
     ]
   }
 }

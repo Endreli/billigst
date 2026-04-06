@@ -7,14 +7,14 @@ interface StatCardProps {
 export function StatCard({ label, value, color = "white" }: StatCardProps) {
   const colorClass = {
     red: "text-red-500",
-    green: "text-green-500",
+    green: "text-primary",
     white: "text-white",
   }[color];
 
   return (
-    <div className="bg-surface rounded-xl p-4">
-      <div className="text-xs text-gray-500 uppercase tracking-wider">{label}</div>
-      <div className={`text-xl font-bold mt-1 ${colorClass}`}>{value}</div>
+    <div className="bg-surface rounded-card p-5">
+      <div className="text-[13px] text-text-muted uppercase tracking-wider">{label}</div>
+      <div className={`text-xl font-bold mt-1.5 ${colorClass}`}>{value}</div>
     </div>
   );
 }

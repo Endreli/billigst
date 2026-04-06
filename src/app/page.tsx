@@ -1,6 +1,9 @@
 import { SearchBar } from "@/components/search-bar";
 import { StatCard } from "@/components/stat-card";
 import { TrendingList } from "@/components/trending-list";
+import { PopularProducts } from "@/components/popular-products";
+import { BasketPreview } from "@/components/basket-preview";
+import Link from "next/link";
 
 async function getTrending() {
   const baseUrl = process.env.VERCEL_URL
@@ -22,20 +25,20 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-6">
-      <div className="text-center pt-8 pb-4">
-        <h1 className="text-3xl font-bold mb-2">HvaKosta.no</h1>
-        <p className="text-gray-500 text-sm mb-6">
-          Se hva ting koster — og hva de kostet før
+      {/* Hero — search first */}
+      <div className="text-center pt-6 pb-1">
+        <p className="text-xl font-semibold text-white mb-5">
+          Finn den billigste butikken for handlelisten din
         </p>
         <div className="max-w-lg mx-auto">
           <SearchBar />
         </div>
         <div className="flex gap-2 justify-center mt-4 flex-wrap">
-          {["Grandiosa", "Melk", "Kvikk Lunsj", "Norvegia", "Smør"].map((term) => (
+          {["Grandiosa", "Melk", "Kvikk Lunsj", "Norvegia", "Egg"].map((term) => (
             <a
               key={term}
               href={`/sok?q=${encodeURIComponent(term)}`}
-              className="bg-surface-hover border border-border px-3 py-1.5 rounded-full text-xs text-gray-400 hover:text-white transition-colors"
+              className="bg-surface-hover border border-border px-4 py-2.5 rounded-full text-[13px] text-text-muted hover:text-white hover:border-primary/30 transition-colors active:scale-95"
             >
               {term}
             </a>
@@ -43,17 +46,44 @@ export default async function HomePage() {
         </div>
       </div>
 
+      {/* Handlekurv — shows live preview if items exist, otherwise static CTA */}
+      <BasketPreview />
+      <Link
+        href="/handlekurv"
+        className="block bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/25 rounded-card p-5 hover:border-primary/40 transition-all group press-scale"
+      >
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 bg-primary/15 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="9" cy="21" r="1" />
+              <circle cx="20" cy="21" r="1" />
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <div className="text-white font-semibold text-[15px]">Sammenlign handlekurven din</div>
+            <div className="text-text-muted text-[13px] mt-0.5">
+              Legg til varer og finn den billigste butikken
+            </div>
+          </div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b8fa3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:translate-x-1 transition-transform flex-shrink-0">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </div>
+      </Link>
+
+      {/* Quick add popular products */}
+      <div className="bg-surface rounded-card p-5 space-y-3">
+        <h3 className="text-[13px] text-text-muted uppercase tracking-wider">Legg til raskt</h3>
+        <PopularProducts />
+      </div>
+
       {trendingData && (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <StatCard
-              label="KPI siste måned"
-              value={trendingData.stats.latestCpi ? `${Number(trendingData.stats.latestCpi.value).toFixed(1)}` : "—"}
-              color="red"
-            />
+          <div className="grid grid-cols-2 gap-3">
             <StatCard
               label="Mest økt (30d)"
-              value={trendingData.trending[0] ? `${trendingData.trending[0].name} +${trendingData.trending[0].change.toFixed(0)} kr` : "—"}
+              value={trendingData.trending[0] ? `+${trendingData.trending[0].change.toFixed(0)} kr` : "--"}
             />
             <StatCard
               label="Produkter"

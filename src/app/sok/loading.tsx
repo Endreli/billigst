@@ -1,0 +1,21 @@
+export default function Loading() {
+  return (
+    <div className="space-y-4">
+      {/* Search bar */}
+      <div className="h-14 animate-shimmer rounded-2xl" />
+      <div className="h-4 w-48 animate-shimmer rounded" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="bg-surface rounded-card p-5 flex gap-4">
+            <div className="w-20 h-20 animate-shimmer rounded-xl flex-shrink-0" />
+            <div className="flex-1 space-y-2 py-1">
+              <div className="h-3 w-16 animate-shimmer rounded" />
+              <div className="h-5 w-40 animate-shimmer rounded" />
+              <div className="h-4 w-24 animate-shimmer rounded" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

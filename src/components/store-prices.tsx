@@ -1,44 +1,55 @@
+import { formatKr } from "@/lib/format";
+import { ChainLogo } from "@/components/chain-logo";
+
 interface StorePrice {
   chain: string;
   price: number;
   date: string;
 }
 
-const CHAIN_COLORS: Record<string, string> = {
-  Kiwi: "bg-green-500",
-  Meny: "bg-purple-500",
-  "Rema 1000": "bg-blue-500",
-  Spar: "bg-yellow-500",
-  Joker: "bg-orange-500",
-  Oda: "bg-cyan-500",
-  Bunnpris: "bg-red-500",
-  "Coop Extra": "bg-pink-500",
-  "Coop Mega": "bg-pink-600",
-  "Coop Obs": "bg-pink-700",
-  "Coop Prix": "bg-pink-400",
-};
-
 export function StorePrices({ prices }: { prices: StorePrice[] }) {
   const sorted = [...prices].sort((a, b) => a.price - b.price);
   const cheapest = sorted[0]?.price;
 
   return (
-    <div className="bg-surface rounded-xl p-5">
-      <h3 className="text-white font-semibold mb-3">Pris i butikker nå</h3>
+    <div className="bg-surface rounded-card p-5">
+      <h3 className="text-white font-semibold text-[15px] mb-3">Pris i butikker nå</h3>
       <div className="flex flex-col gap-2">
-        {sorted.map((p) => (
-          <div key={p.chain} className="flex items-center justify-between bg-surface-hover px-3 py-2.5 rounded-lg">
-            <div className="flex items-center gap-3">
-              <div className={`w-7 h-7 rounded-md flex items-center justify-center text-xs font-bold text-white ${CHAIN_COLORS[p.chain] || "bg-gray-500"}`}>
-                {p.chain[0]}
+        {sorted.map((p, i) => {
+          const isCheapest = p.price === cheapest && sorted.length > 1;
+          const diff = p.price - cheapest;
+          return (
+            <div
+              key={p.chain}
+              className={`flex items-center justify-between px-4 py-3.5 rounded-xl transition-colors ${
+                isCheapest
+                  ? "bg-primary/10 ring-1 ring-primary/25"
+                  : "bg-surface-hover"
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-text-muted text-[13px] w-5 text-center tabular-nums">{i + 1}.</span>
+                <ChainLogo chain={p.chain} size={36} />
+                <div>
+                  <span className="text-gray-300 text-[15px]">{p.chain}</span>
+                  {isCheapest && (
+                    <span className="ml-2 text-primary text-[11px] font-semibold bg-primary/15 px-1.5 py-0.5 rounded">
+                      BILLIGST
+                    </span>
+                  )}
+                </div>
               </div>
-              <span className="text-gray-300 text-sm">{p.chain}</span>
+              <div className="text-right">
+                <span className={`text-[15px] font-semibold ${isCheapest ? "text-primary" : "text-white"}`}>
+                  {formatKr(p.price)}
+                </span>
+                {diff > 0 && (
+                  <div className="text-red-400/70 text-[12px] tabular-nums">+{formatKr(diff)}</div>
+                )}
+              </div>
             </div>
-            <span className={`text-base font-semibold ${p.price === cheapest ? "text-green-500" : "text-white"}`}>
-              {p.price.toFixed(2)} kr
-            </span>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

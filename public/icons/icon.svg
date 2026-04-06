@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="108" fill="#0a0a0a"/>
+  <text x="256" y="200" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-size="72" font-weight="800" fill="#22c55e">HVA</text>
+  <text x="256" y="290" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-size="72" font-weight="800" fill="#ffffff">KOSTA</text>
+  <text x="256" y="370" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-size="36" fill="#22c55e">kr</text>
+  <circle cx="256" cy="440" r="8" fill="#22c55e"/>
+</svg>

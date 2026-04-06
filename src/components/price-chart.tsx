@@ -2,13 +2,12 @@
 
 import { useState, useEffect } from "react";
 import {
-  LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend,
+  LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer,
 } from "recharts";
 import { format, parseISO } from "date-fns";
 import { nb } from "date-fns/locale";
 
 interface PricePoint { chain: string; price: number; date: string; }
-interface CpiPoint { year: number; month: number; price: number; }
 
 interface PriceChartProps { ean: string; initialPeriod?: string; }
 
@@ -21,7 +20,7 @@ const PERIODS = [
 
 export function PriceChart({ ean, initialPeriod = "1y" }: PriceChartProps) {
   const [period, setPeriod] = useState(initialPeriod);
-  const [data, setData] = useState<{ prices: PricePoint[]; cpiLine: CpiPoint[] } | null>(null);
+  const [data, setData] = useState<{ prices: PricePoint[] } | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function fetchData(p: string) {
@@ -47,28 +46,18 @@ export function PriceChart({ ean, initialPeriod = "1y" }: PriceChartProps) {
 
   if (!data || loading) {
     return (
-      <div className="bg-surface rounded-xl p-5 h-80 flex items-center justify-center">
-        <span className="text-gray-500">Laster prishistorikk...</span>
+      <div className="bg-surface rounded-card p-5 h-80 flex items-center justify-center">
+        <span className="text-text-muted">Laster prishistorikk...</span>
       </div>
     );
   }
 
-  const chartMap = new Map<string, { date: string; price: number | null; kpi: number | null }>();
+  const chartMap = new Map<string, { date: string; price: number }>();
 
   for (const p of data.prices) {
     const dateKey = typeof p.date === "string" ? p.date.slice(0, 10) : format(new Date(p.date), "yyyy-MM-dd");
     if (!chartMap.has(dateKey) || (chartMap.get(dateKey)!.price ?? 0) < p.price) {
-      chartMap.set(dateKey, { date: dateKey, price: Number(p.price), kpi: chartMap.get(dateKey)?.kpi ?? null });
-    }
-  }
-
-  for (const c of data.cpiLine) {
-    const dateKey = `${c.year}-${String(c.month).padStart(2, "0")}-15`;
-    const existing = chartMap.get(dateKey);
-    if (existing) {
-      existing.kpi = c.price;
-    } else {
-      chartMap.set(dateKey, { date: dateKey, price: null, kpi: c.price });
+      chartMap.set(dateKey, { date: dateKey, price: Number(p.price) });
     }
   }
 
@@ -77,14 +66,14 @@ export function PriceChart({ ean, initialPeriod = "1y" }: PriceChartProps) {
   );
 
   return (
-    <div className="bg-surface rounded-xl p-5">
+    <div className="bg-surface rounded-card p-5">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-white font-semibold">Prishistorikk</h3>
+        <h3 className="text-white font-semibold text-[15px]">Prishistorikk</h3>
         <div className="flex gap-1">
           {PERIODS.map((p) => (
             <button key={p.key} onClick={() => handlePeriodChange(p.key)}
-              className={`px-3 py-1 text-xs rounded-md transition-colors ${
-                period === p.key ? "bg-blue-500 text-white" : "bg-surface-hover text-gray-500 hover:text-gray-300"
+              className={`px-4 py-2 min-w-[44px] text-[13px] rounded-xl transition-colors active:scale-95 ${
+                period === p.key ? "bg-primary text-white" : "bg-surface-hover text-text-muted hover:text-white"
               }`}>
               {p.label}
             </button>
@@ -93,21 +82,18 @@ export function PriceChart({ ean, initialPeriod = "1y" }: PriceChartProps) {
       </div>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={chartData}>
-          <XAxis dataKey="date" tick={{ fill: "#555", fontSize: 11 }}
+          <XAxis dataKey="date" tick={{ fill: "#8b8fa3", fontSize: 11 }}
             tickFormatter={(d) => format(parseISO(d), "MMM yy", { locale: nb })}
-            axisLine={{ stroke: "#1a1a1a" }} tickLine={false} />
-          <YAxis tick={{ fill: "#555", fontSize: 11 }} tickFormatter={(v) => `${v} kr`}
+            axisLine={{ stroke: "#2a2f3d" }} tickLine={false} />
+          <YAxis tick={{ fill: "#8b8fa3", fontSize: 11 }} tickFormatter={(v) => `${v} kr`}
             axisLine={false} tickLine={false} />
-          <Tooltip contentStyle={{ background: "#1a1a1a", border: "1px solid #333", borderRadius: 8, color: "#fff" }}
+          <Tooltip contentStyle={{ background: "#181b23", border: "1px solid #2a2f3d", borderRadius: 12, color: "#fff" }}
             labelFormatter={(d) => format(parseISO(d as string), "d. MMMM yyyy", { locale: nb })}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            formatter={(value: any, name: any) => [
-              value != null ? `${Number(value).toFixed(2)} kr` : "", name === "price" ? "Pris" : "KPI-justert",
+            formatter={(value: any) => [
+              value != null ? `${Number(value).toLocaleString("no-NO", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} kr` : "", "Pris",
             ]} />
-          <Legend formatter={(value) => (value === "price" ? "Pris" : "KPI-justert")}
-            wrapperStyle={{ color: "#888", fontSize: 12 }} />
-          <Line type="monotone" dataKey="price" stroke="#3b82f6" strokeWidth={2.5} dot={false} connectNulls />
-          <Line type="monotone" dataKey="kpi" stroke="#f59e0b" strokeWidth={1.5} strokeDasharray="6 4" dot={false} connectNulls />
+          <Line type="monotone" dataKey="price" stroke="#22c55e" strokeWidth={2.5} dot={false} connectNulls />
         </LineChart>
       </ResponsiveContainer>
     </div>

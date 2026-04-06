@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { calculateCpiReferenceLine } from "@/lib/cpi-calc";
 import { subMonths, subDays } from "date-fns";
 
 export async function GET(
@@ -22,7 +21,7 @@ export async function GET(
     case "1m": since = subDays(now, 30); break;
     case "6m": since = subMonths(now, 6); break;
     case "1y": since = subMonths(now, 12); break;
-    case "max": since = new Date(2020, 0, 1); break;
+    case "max": since = new Date(2015, 0, 1); break;
     default: since = subMonths(now, 12);
   }
 
@@ -31,31 +30,8 @@ export async function GET(
     orderBy: { date: "asc" },
   });
 
-  const cpiData = await prisma.cpiData.findMany({
-    where: {
-      OR: [
-        { year: { gt: since.getFullYear() } },
-        { year: since.getFullYear(), month: { gte: since.getMonth() + 1 } },
-      ],
-    },
-    orderBy: [{ year: "asc" }, { month: "asc" }],
-  });
-
-  const earliestPrice = prices[0];
-  const cpiLine = earliestPrice
-    ? calculateCpiReferenceLine(
-        Number(earliestPrice.price),
-        cpiData.map((c) => ({ year: c.year, month: c.month, value: Number(c.value) })),
-        {
-          year: new Date(earliestPrice.date).getFullYear(),
-          month: new Date(earliestPrice.date).getMonth() + 1,
-        }
-      )
-    : [];
-
   return NextResponse.json({
     ean, period,
     prices: prices.map((p) => ({ chain: p.chain, price: Number(p.price), date: p.date })),
-    cpiLine,
   });
 }

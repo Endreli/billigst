@@ -43,3 +43,9 @@ next-env.d.ts
 
 # superpowers
 .superpowers/
+
+/src/generated/prisma
+
+# SQLite
+*.db
+*.db-journal
