@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { searchProducts as kassalSearch } from "@/lib/kassal";
 import { normalizeChain } from "@/lib/chains";
+import { fetchAndSaveAllPrices } from "@/lib/fetch-all-prices";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -145,6 +146,10 @@ export async function GET(request: NextRequest) {
         }
       }
     }
+
+    // Fetch prices from ALL chains for the newly saved products (fire-and-forget)
+    const newEans = kassalResult.data.filter((kp) => kp.ean).map((kp) => kp.ean);
+    fetchAndSaveAllPrices(newEans).catch(() => {});
 
     return NextResponse.json({
       products: kassalResult.data

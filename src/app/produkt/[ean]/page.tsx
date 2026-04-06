@@ -8,6 +8,7 @@ import { getFormattedUnitPrice } from "@/lib/unit-price";
 import { prisma } from "@/lib/db";
 import { getProductByEan } from "@/lib/kassal";
 import { normalizeChain } from "@/lib/chains";
+import { fetchAndSaveAllPrices } from "@/lib/fetch-all-prices";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
@@ -57,7 +58,7 @@ async function getProduct(ean: string) {
         include: { prices: { orderBy: { date: "desc" }, take: 1 } },
       });
 
-      // Save current price
+      // Save the single price from Kassal immediately
       const priceVal = typeof kp.current_price === "number" ? kp.current_price : null;
       if (priceVal != null && kp.store?.name) {
         const chainName = normalizeChain(kp.store.name);
@@ -72,9 +73,30 @@ async function getProduct(ean: string) {
           },
         }).catch(() => {});
       }
+
+      // Now fetch prices from ALL chains via bulk API
+      // This ensures we don't just show one chain's price
+      await fetchAndSaveAllPrices([ean]).catch(() => {});
     } catch {
       return null;
     }
+  }
+
+  // Check if we only have prices from 1 chain, or prices are old (>3 days)
+  // If so, refresh from Kassal bulk API to get all chains
+  const existingPriceCount = await prisma.price.findMany({
+    where: { productId: product.id },
+    orderBy: { date: "desc" },
+    distinct: ["chain"],
+    take: 2,
+  });
+  const latestDate = existingPriceCount[0]?.date;
+  const threeDaysAgo = new Date();
+  threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+  const needsRefresh = existingPriceCount.length <= 1 || (latestDate && latestDate < threeDaysAgo);
+
+  if (needsRefresh) {
+    await fetchAndSaveAllPrices([product.ean]).catch(() => {});
   }
 
   const latestPrices = await prisma.price.findMany({

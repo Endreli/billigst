@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getProductByEan } from "@/lib/kassal";
 import { normalizeChain } from "@/lib/chains";
+import { fetchAndSaveAllPrices } from "@/lib/fetch-all-prices";
 
 export async function GET(
   _request: NextRequest,
@@ -46,6 +47,9 @@ export async function GET(
           },
         }).catch(() => {});
       }
+
+      // Fetch prices from ALL chains via bulk API
+      await fetchAndSaveAllPrices([ean]).catch(() => {});
     } catch {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
