@@ -90,18 +90,24 @@ export function ChainTotalCard({
 
         {/* Driving cost breakdown */}
         {drivingCost && drivingCost.totalDrivingCost > 0 && (
-          <div className="text-[12px] text-text-muted mt-1 flex items-center gap-1.5">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2" />
-              <circle cx="6.5" cy="16.5" r="2.5" />
-              <circle cx="16.5" cy="16.5" r="2.5" />
-            </svg>
-            <span>
+          <div className="text-[12px] mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5">
+            <span className="text-text-muted flex items-center gap-1">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2" />
+                <circle cx="6.5" cy="16.5" r="2.5" />
+                <circle cx="16.5" cy="16.5" r="2.5" />
+              </svg>
               +{formatKr(drivingCost.fuelCost)} drivstoff
-              {drivingCost.tollEstimate > 0 && (
-                <> + {formatKr(drivingCost.tollEstimate)} bom</>
-              )}
             </span>
+            {drivingCost.tollEstimate > 0 && (
+              <span className="text-orange-400 font-medium flex items-center gap-1">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+                +{formatKr(drivingCost.tollEstimate)} bom
+                <span className="text-text-muted font-normal">({drivingCost.tollZones.join(", ")})</span>
+              </span>
+            )}
           </div>
         )}
       </div>

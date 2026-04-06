@@ -52,7 +52,7 @@ export default function HandlekurvPage() {
   const { lat, lng, refresh: refreshLocation } = useLocation();
   const [nearbyStores, setNearbyStores] = useState<NearbyStore[]>([]);
   const [routes, setRoutes] = useState<Map<string, RouteResult>>(new Map());
-  const [showDrivingCosts, setShowDrivingCosts] = useState(false);
+  const [showDrivingCosts, setShowDrivingCosts] = useState(true); // Auto-show when location available
   const [locationRequested, setLocationRequested] = useState(false);
 
   // Fetch nearby stores when location becomes available
