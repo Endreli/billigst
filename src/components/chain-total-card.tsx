@@ -63,17 +63,22 @@ export function ChainTotalCard({
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
           <span className="text-white font-semibold text-[15px]">{chain}</span>
-          {isCheapest && (
+          {isCheapest && itemsMissing === 0 && (
             <span className="bg-primary/15 text-primary text-[11px] font-semibold px-2 py-0.5 rounded-md">
               BILLIGST
             </span>
           )}
+          {itemsMissing > 0 && (
+            <span className="bg-orange-500/15 text-orange-400 text-[11px] font-semibold px-2 py-0.5 rounded-md">
+              {itemsMissing} varer mangler
+            </span>
+          )}
         </div>
         <div className="text-text-muted text-[13px] mt-0.5">
-          {itemsAvailable}/{itemsAvailable + itemsMissing} varer
-          {itemsMissing > 0 && (
-            <span className="text-orange-400 ml-1">({itemsMissing} mangler)</span>
-          )}
+          {itemsMissing === 0
+            ? `Alle ${itemsAvailable} varer tilgjengelig`
+            : `${itemsAvailable} av ${itemsAvailable + itemsMissing} varer`
+          }
           {drivingCost?.durationMin != null ? (
             <span className="ml-2">· {drivingCost.distanceKm} km · {drivingCost.durationMin} min</span>
           ) : distance != null ? (

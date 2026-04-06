@@ -96,15 +96,17 @@ export default function HandlekurvPage() {
     }
   }
 
-  // When driving costs are shown, re-sort chains by total + driving cost
+  // Sort chains: always prioritize stores that have the most items,
+  // then by total (+ driving cost if enabled)
   const sortedChainTotals = data?.chainTotals ? [...data.chainTotals] : [];
-  if (showDrivingCosts && sortedChainTotals.length > 0) {
-    sortedChainTotals.sort((a, b) => {
-      const aCost = a.total + (drivingCostMap.get(a.chain)?.totalDrivingCost || 0);
-      const bCost = b.total + (drivingCostMap.get(b.chain)?.totalDrivingCost || 0);
-      return aCost - bCost;
-    });
-  }
+  sortedChainTotals.sort((a, b) => {
+    // First: fewer missing items = better (stores with all items first)
+    if (a.itemsMissing !== b.itemsMissing) return a.itemsMissing - b.itemsMissing;
+    // Then: cheapest total (including driving if enabled)
+    const aCost = a.total + (showDrivingCosts ? (drivingCostMap.get(a.chain)?.totalDrivingCost || 0) : 0);
+    const bCost = b.total + (showDrivingCosts ? (drivingCostMap.get(b.chain)?.totalDrivingCost || 0) : 0);
+    return aCost - bCost;
+  });
 
   const calculate = useCallback(async () => {
     if (items.length === 0) {
