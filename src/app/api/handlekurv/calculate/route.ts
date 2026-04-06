@@ -53,7 +53,12 @@ export async function POST(request: NextRequest) {
   const productIds = products.map((p) => p.id);
 
   // Get latest price per product per chain using raw SQL
+  // Only include prices from the last year — older prices are unreliable
   const placeholders = productIds.map(() => "?").join(",");
+  const oneYearAgo = new Date();
+  oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+  const oneYearAgoStr = oneYearAgo.toISOString();
+
   const latestPrices = await prisma.$queryRawUnsafe<
     { product_id: number; chain: string; price: number }[]
   >(
@@ -61,9 +66,10 @@ export async function POST(request: NextRequest) {
       SELECT product_id, chain, price,
         ROW_NUMBER() OVER (PARTITION BY product_id, chain ORDER BY date DESC) as rn
       FROM prices
-      WHERE product_id IN (${placeholders})
+      WHERE product_id IN (${placeholders}) AND date >= ?
     ) WHERE rn = 1`,
-    ...productIds
+    ...productIds,
+    oneYearAgoStr
   );
 
   // Build price map: productId -> chain -> price

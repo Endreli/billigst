@@ -3,7 +3,7 @@ import { StorePrices } from "@/components/store-prices";
 import { SimilarProducts } from "@/components/similar-products";
 import { AddToBasketButton } from "@/components/add-to-basket-button";
 import { BackButton } from "@/components/back-button";
-import { formatKr, formatDate } from "@/lib/format";
+import { formatKr, formatDate, daysAgo, PRICE_EXPIRED_DAYS } from "@/lib/format";
 import { getFormattedUnitPrice } from "@/lib/unit-price";
 import { prisma } from "@/lib/db";
 import { getProductByEan, getKassalPrice, getKassalStore } from "@/lib/kassal";
@@ -155,10 +155,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   if (!product) notFound();
 
-  const prices = product.latestPrices.map((p: any) => Number(p.price));
+  // Only use reasonably fresh prices for the headline comparison
+  const freshPrices = product.latestPrices.filter((p: any) => daysAgo(p.date) < PRICE_EXPIRED_DAYS);
+  const allPrices = product.latestPrices;
+  const prices = freshPrices.map((p: any) => Number(p.price));
   const cheapest = prices.length > 0 ? Math.min(...prices) : null;
   const mostExpensive = prices.length > 0 ? Math.max(...prices) : null;
-  const storeCount = product.latestPrices.length;
+  const storeCount = allPrices.length;
+  const freshCount = freshPrices.length;
 
   return (
     <div className="space-y-6">
@@ -199,7 +203,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
           })()}
           {storeCount > 0 && (
             <div className="text-[13px] text-text-muted mt-1">
-              Tilgjengelig i {storeCount} {storeCount === 1 ? "butikkjede" : "butikkjeder"}
+              {freshCount > 0 ? (
+                <>Oppdatert pris i {freshCount} {freshCount === 1 ? "butikkjede" : "butikkjeder"}</>
+              ) : (
+                <>Sist sett i {storeCount} {storeCount === 1 ? "butikkjede" : "butikkjeder"}</>
+              )}
             </div>
           )}
         </div>
