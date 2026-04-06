@@ -1,8 +1,10 @@
 import { PriceChart } from "@/components/price-chart";
 import { StorePrices } from "@/components/store-prices";
+import { SimilarProducts } from "@/components/similar-products";
 import { AddToBasketButton } from "@/components/add-to-basket-button";
 import { BackButton } from "@/components/back-button";
 import { formatKr, formatDate } from "@/lib/format";
+import { getFormattedUnitPrice } from "@/lib/unit-price";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
@@ -98,6 +100,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
               )}
             </div>
           )}
+          {cheapest != null && (() => {
+            const unitPrice = getFormattedUnitPrice(product.name, cheapest);
+            return unitPrice ? (
+              <div className="text-[13px] text-text-muted mt-0.5">{unitPrice}</div>
+            ) : null;
+          })()}
           {storeCount > 0 && (
             <div className="text-[13px] text-text-muted mt-1">
               Tilgjengelig i {storeCount} {storeCount === 1 ? "butikkjede" : "butikkjeder"}
@@ -176,6 +184,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
           })()}
         </>
       )}
+
+      <SimilarProducts ean={ean} currentName={product.name} />
     </div>
   );
 }

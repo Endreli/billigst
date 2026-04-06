@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useBasketContext } from "@/components/basket-provider";
 import { ProductImage } from "@/components/product-image";
 import { formatKr } from "@/lib/format";
+import { getFormattedUnitPrice } from "@/lib/unit-price";
 import { useState } from "react";
 
 interface ProductCardProps {
@@ -46,7 +47,20 @@ export function ProductCard({ ean, name, brand, imageUrl, currentPrice, chain }:
               {currentPrice != null && (
                 <span className="text-white font-bold text-[15px]">{formatKr(currentPrice)}</span>
               )}
+              {currentPrice != null && (() => {
+                const unitPrice = getFormattedUnitPrice(name, currentPrice);
+                return unitPrice ? (
+                  <span className="text-[12px] text-text-muted">{unitPrice}</span>
+                ) : null;
+              })()}
               {chain && <span className="text-[12px] text-text-muted">{chain}</span>}
+            </div>
+            <div className="text-primary text-[12px] mt-1.5 flex items-center gap-1 group-hover:underline">
+              Sammenlign priser
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
             </div>
           </div>
         </div>

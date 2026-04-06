@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useBasketContext } from "@/components/basket-provider";
 import { ProductImage } from "@/components/product-image";
+import { getFormattedUnitPrice } from "@/lib/unit-price";
 
 interface SearchResult {
   ean: string;
@@ -131,7 +132,15 @@ export function BasketSearch() {
                   {p.brand && <div className="text-text-muted text-[13px]">{p.brand}</div>}
                 </div>
                 {p.currentPrice != null && (
-                  <span className="text-text-muted text-[13px] flex-shrink-0">{p.currentPrice.toFixed(0)} kr</span>
+                  <div className="text-right flex-shrink-0">
+                    <div className="text-text-muted text-[13px]">{p.currentPrice.toFixed(0)} kr</div>
+                    {(() => {
+                      const unitPrice = getFormattedUnitPrice(p.name, p.currentPrice!);
+                      return unitPrice ? (
+                        <div className="text-text-muted text-[11px]">{unitPrice}</div>
+                      ) : null;
+                    })()}
+                  </div>
                 )}
                 <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 active:scale-90 transition-transform">
                   {isAdded ? (
