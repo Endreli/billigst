@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { searchProducts as kassalSearch } from "@/lib/kassal";
+import { searchProducts as kassalSearch, getKassalPrice } from "@/lib/kassal";
 import { normalizeChain } from "@/lib/chains";
 import { fetchAndSaveAllPrices } from "@/lib/fetch-all-prices";
 
@@ -118,7 +118,7 @@ export async function GET(request: NextRequest) {
             },
           });
 
-          const priceVal = typeof kp.current_price === "number" ? kp.current_price : null;
+          const priceVal = getKassalPrice(kp);
           const storeName = kp.store?.name;
           if (priceVal != null && storeName) {
             const chainName = normalizeChain(storeName);
@@ -160,7 +160,7 @@ export async function GET(request: NextRequest) {
           brand: kp.brand,
           vendor: kp.vendor,
           imageUrl: kp.image,
-          currentPrice: typeof kp.current_price === "number" ? kp.current_price : null,
+          currentPrice: getKassalPrice(kp),
           chain: kp.store?.name ? normalizeChain(kp.store.name) : null,
         })),
       source: "kassal", page, limit,
