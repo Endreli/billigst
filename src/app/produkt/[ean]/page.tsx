@@ -81,6 +81,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
           )}
         </div>
         <div className="flex-1">
+          {product.category && (
+            <span className="inline-block bg-primary/15 text-primary text-[11px] font-semibold px-2 py-0.5 rounded-full mb-1">
+              {product.category}
+            </span>
+          )}
           <div className="text-[13px] text-text-muted uppercase">
             {[product.vendor, product.brand].filter(Boolean).join(" / ")}
           </div>
@@ -114,6 +119,33 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </div>
         </div>
       )}
+
+      {/* Product info card */}
+      <div className="bg-surface rounded-xl p-4 space-y-3">
+        <h2 className="text-[13px] font-semibold text-text-muted uppercase tracking-wide">Produktinformasjon</h2>
+        <div className="grid grid-cols-2 gap-y-2.5 gap-x-4 text-[14px]">
+          {product.brand && (
+            <>
+              <span className="text-text-muted">Merke</span>
+              <span className="text-white font-medium">{product.brand}</span>
+            </>
+          )}
+          {product.vendor && (
+            <>
+              <span className="text-text-muted">Leverandør</span>
+              <span className="text-white font-medium">{product.vendor}</span>
+            </>
+          )}
+          {product.category && (
+            <>
+              <span className="text-text-muted">Kategori</span>
+              <span className="text-white font-medium">{product.category}</span>
+            </>
+          )}
+          <span className="text-text-muted">Strekkode</span>
+          <span className="text-white font-medium font-mono text-[13px]">{ean}</span>
+        </div>
+      </div>
 
       <AddToBasketButton
         ean={ean}

@@ -60,6 +60,7 @@ export async function GET(
   return NextResponse.json({
     ean: product.ean, name: product.name, brand: product.brand,
     vendor: product.vendor, imageUrl: product.imageUrl,
+    category: product.category ?? null,
     latestPrices: latestPrices.map((p) => ({
       chain: p.chain, price: Number(p.price), date: p.date,
     })),

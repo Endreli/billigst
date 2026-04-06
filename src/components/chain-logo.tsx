@@ -22,7 +22,7 @@ const LOGO_MAP: Record<string, string> = {
   "Oda": "/logos/oda.png",
 };
 
-const CHAIN_BG: Record<string, string> = {
+const CHAIN_COLORS: Record<string, string> = {
   "Kiwi": "#4a8c2a",
   "Rema 1000": "#005baa",
   "Meny": "#c41e3a",
@@ -39,31 +39,34 @@ const CHAIN_BG: Record<string, string> = {
 export function ChainLogo({ chain, size = 44, className = "" }: ChainLogoProps) {
   const [failed, setFailed] = useState(false);
   const logoUrl = LOGO_MAP[chain];
-  const bg = CHAIN_BG[chain] || "#555";
+  const color = CHAIN_COLORS[chain] || "#555";
 
-  // Fallback: colored square with letter
+  // Fallback: colored square with first letter
   if (!logoUrl || failed) {
     return (
       <div
         className={`rounded-xl flex items-center justify-center font-bold text-white flex-shrink-0 ${className}`}
-        style={{ width: size, height: size, backgroundColor: bg, fontSize: size * 0.4 }}
+        style={{ width: size, height: size, backgroundColor: color, fontSize: size * 0.38 }}
+        aria-label={chain}
       >
-        {chain[0]}
+        {chain.charAt(0)}
       </div>
     );
   }
 
   return (
     <div
-      className={`rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden ${className}`}
-      style={{ width: size, height: size, backgroundColor: bg }}
+      className={`rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden bg-white ${className}`}
+      style={{ width: size, height: size }}
+      aria-label={chain}
     >
       <img
         src={logoUrl}
         alt={chain}
-        width={size}
-        height={size}
-        className="w-full h-full object-contain p-1"
+        width={size - 4}
+        height={size - 4}
+        className="object-contain"
+        style={{ width: size - 6, height: size - 6 }}
         onError={() => setFailed(true)}
         loading="lazy"
       />

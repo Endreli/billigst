@@ -46,7 +46,7 @@ export function InstallPrompt() {
     <div className="fixed top-18 left-4 right-4 z-40 max-w-lg mx-auto animate-slide-up sm:left-auto sm:right-4 sm:max-w-sm">
       <div className="bg-surface border border-border rounded-2xl p-4 shadow-2xl flex items-center gap-3">
         <div className="w-11 h-11 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
             <polyline points="7 10 12 15 17 10" />
             <line x1="12" y1="15" x2="12" y2="3" />

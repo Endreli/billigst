@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useLocation } from "@/hooks/use-location";
-import { findNearbyStores, getNearestPerChain, calculateDrivingCost, type NearbyStore } from "@/lib/store-locator";
+import { findNearbyStores, getNearestPerChain, calculateDrivingCost, type NearbyStore, type StoreSearchResult } from "@/lib/store-locator";
 import { getRoutesFromOrigin, type RouteResult } from "@/lib/routing";
 import { formatKr } from "@/lib/format";
 import { ChainLogo } from "@/components/chain-logo";
@@ -10,6 +10,8 @@ import { ChainLogo } from "@/components/chain-logo";
 export default function ButikkerPage() {
   const { lat, lng, loading: locLoading, error: locError, refresh } = useLocation();
   const [stores, setStores] = useState<NearbyStore[]>([]);
+  const [rawCount, setRawCount] = useState(0);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showAll, setShowAll] = useState(false);
   const [routes, setRoutes] = useState<Map<string, RouteResult>>(new Map());
@@ -17,8 +19,11 @@ export default function ButikkerPage() {
   useEffect(() => {
     if (lat && lng) {
       setLoading(true);
-      findNearbyStores(lat, lng).then((s) => {
-        setStores(s);
+      setFetchError(null);
+      findNearbyStores(lat, lng).then((result) => {
+        setStores(result.stores);
+        setRawCount(result.rawCount);
+        setFetchError(result.error ?? null);
         setLoading(false);
       });
     }
@@ -64,7 +69,7 @@ export default function ButikkerPage() {
       {!hasLocation && !locLoading && (
         <div className="bg-surface rounded-card p-6 text-center space-y-4">
           <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
               <circle cx="12" cy="10" r="3" />
             </svg>
@@ -98,8 +103,24 @@ export default function ButikkerPage() {
       )}
 
       {hasLocation && !loading && stores.length === 0 && (
-        <div className="bg-surface rounded-card p-6 text-center">
-          <p className="text-text-muted text-[15px]">Ingen butikker funnet i nærheten</p>
+        <div className="bg-surface rounded-card p-6 text-center space-y-2">
+          {fetchError ? (
+            <>
+              <p className="text-red-400 text-[15px]">Kunne ikke hente butikker</p>
+              <p className="text-text-muted text-[13px]">{fetchError}</p>
+            </>
+          ) : rawCount > 0 ? (
+            <>
+              <p className="text-text-muted text-[15px]">
+                {rawCount} butikker funnet, men ingen kjente kjeder i nærheten
+              </p>
+              <p className="text-text-muted text-[13px]">
+                Vi gjenkjenner Kiwi, Rema 1000, Meny, Coop, Spar, Joker, Bunnpris og Oda
+              </p>
+            </>
+          ) : (
+            <p className="text-text-muted text-[15px]">Ingen butikker funnet innen 5 km</p>
+          )}
           <button onClick={refresh} className="text-primary text-[15px] mt-2 active:scale-95">
             Prøv igjen
           </button>

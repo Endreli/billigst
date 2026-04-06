@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BasketBadge } from "@/components/basket-badge";
+import { BilligstLogo } from "@/components/billigst-logo";
 
 export function Nav() {
   const pathname = usePathname();
@@ -17,9 +18,7 @@ export function Nav() {
     <nav className="border-b border-border bg-background/90 backdrop-blur-md sticky top-0 z-50" aria-label="Toppmeny">
       <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-1.5">
-          <span className="text-lg font-bold tracking-tight text-primary">
-            Billigst
-          </span>
+          <BilligstLogo size={28} showText />
         </Link>
         <div className="flex items-center gap-6 text-sm">
           {links.map((link) => (

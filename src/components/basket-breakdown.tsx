@@ -21,7 +21,7 @@ interface BasketBreakdownProps {
 }
 
 export function BasketBreakdown({ products, chains }: BasketBreakdownProps) {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
 
   return (
     <div className="bg-surface rounded-card overflow-hidden animate-fade-in">

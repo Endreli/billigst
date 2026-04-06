@@ -13,13 +13,13 @@ const config: CapacitorConfig = {
     SplashScreen: {
       launchShowDuration: 1500,
       launchAutoHide: true,
-      backgroundColor: '#0f1117',
+      backgroundColor: '#111318',
       showSpinner: false,
       launchFadeOutDuration: 300,
     },
     StatusBar: {
       style: 'DARK',
-      backgroundColor: '#0f1117',
+      backgroundColor: '#111318',
     },
     Keyboard: {
       resize: 'body',
@@ -30,10 +30,10 @@ const config: CapacitorConfig = {
     contentInset: 'automatic',
     preferredContentMode: 'mobile',
     scheme: 'Billigst',
-    backgroundColor: '#0f1117',
+    backgroundColor: '#111318',
   },
   android: {
-    backgroundColor: '#0f1117',
+    backgroundColor: '#111318',
     allowMixedContent: false,
   },
 };

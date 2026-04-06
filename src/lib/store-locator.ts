@@ -40,17 +40,22 @@ const CHAIN_MAP: Record<string, string> = {
   rema: "Rema 1000",
   meny: "Meny",
   "coop extra": "Coop Extra",
+  "extra coop": "Coop Extra",
   "coop prix": "Coop Prix",
   "coop mega": "Coop Mega",
   "coop obs": "Coop Obs",
+  "obs bygg": "Coop Obs",
+  "coop marked": "Coop Marked",
   spar: "Spar",
   joker: "Joker",
   bunnpris: "Bunnpris",
   oda: "Oda",
+  "marked ": "Coop Marked",   // trailing space to avoid false matches
+  europris: "Europris",
 };
 
-function matchChain(name: string, brand?: string): string | null {
-  const combined = `${brand || ""} ${name}`.toLowerCase();
+function matchChain(name: string, brand?: string, operator?: string): string | null {
+  const combined = `${brand || ""} ${operator || ""} ${name}`.toLowerCase();
   for (const [key, value] of Object.entries(CHAIN_MAP)) {
     if (combined.includes(key)) return value;
   }
@@ -141,40 +146,65 @@ export function calculateDrivingCost(
 const CACHE_KEY = "billigst-nearby-stores";
 const CACHE_TTL = 60 * 60 * 1000; // 1 hour
 
+export interface StoreSearchResult {
+  stores: NearbyStore[];
+  rawCount: number;    // total OSM elements returned before chain filtering
+  error?: string;      // error message if the fetch failed
+}
+
+const OVERPASS_ENDPOINTS = [
+  "https://overpass-api.de/api/interpreter",
+  "https://overpass.kumi.systems/api/interpreter",
+];
+
+async function queryOverpass(query: string): Promise<Response> {
+  let lastError: unknown;
+  for (const endpoint of OVERPASS_ENDPOINTS) {
+    try {
+      const res = await fetch(`${endpoint}?data=${encodeURIComponent(query)}`, {
+        signal: AbortSignal.timeout(12000),
+      });
+      if (res.ok) return res;
+      lastError = new Error(`${endpoint} returned ${res.status}`);
+    } catch (err) {
+      lastError = err;
+    }
+  }
+  throw lastError;
+}
+
 export async function findNearbyStores(
   lat: number,
   lng: number,
   radiusMeters = 5000
-): Promise<NearbyStore[]> {
+): Promise<StoreSearchResult> {
   // Check cache
   try {
     const cached = localStorage.getItem(CACHE_KEY);
     if (cached) {
-      const { data, timestamp, cachedLat, cachedLng } = JSON.parse(cached);
+      const { data, rawCount, timestamp, cachedLat, cachedLng } = JSON.parse(cached);
       const moved = haversine(lat, lng, cachedLat, cachedLng);
       if (Date.now() - timestamp < CACHE_TTL && moved < 0.5) {
-        return data;
+        return { stores: data, rawCount: rawCount ?? data.length };
       }
     }
   } catch { /* ignore */ }
 
-  const query = `[out:json][timeout:10];(node[shop=supermarket](around:${radiusMeters},${lat},${lng});way[shop=supermarket](around:${radiusMeters},${lat},${lng});node[shop=convenience](around:${radiusMeters},${lat},${lng}););out center tags;`;
+  const query = `[out:json][timeout:15];(node["shop"="supermarket"](around:${radiusMeters},${lat},${lng});way["shop"="supermarket"](around:${radiusMeters},${lat},${lng});node["shop"="convenience"](around:${radiusMeters},${lat},${lng});way["shop"="convenience"](around:${radiusMeters},${lat},${lng}););out center tags;`;
 
   try {
-    const res = await fetch(`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`);
-
-    if (!res.ok) return [];
-
+    const res = await queryOverpass(query);
     const json = await res.json();
+    const elements = json.elements || [];
     const stores: NearbyStore[] = [];
 
-    for (const el of json.elements || []) {
+    for (const el of elements) {
       const elLat = el.lat ?? el.center?.lat;
       const elLng = el.lon ?? el.center?.lon;
       if (!elLat || !elLng) continue;
 
       const tags = el.tags || {};
-      const chain = matchChain(tags.name || "", tags.brand);
+      const chain = matchChain(tags.name || "", tags.brand, tags.operator);
       if (!chain) continue;
 
       const distance = haversine(lat, lng, elLat, elLng);
@@ -191,16 +221,19 @@ export async function findNearbyStores(
 
     stores.sort((a, b) => a.distance - b.distance);
 
+    const result: StoreSearchResult = { stores, rawCount: elements.length };
+
     // Cache results
     try {
       localStorage.setItem(CACHE_KEY, JSON.stringify({
-        data: stores, timestamp: Date.now(), cachedLat: lat, cachedLng: lng,
+        data: stores, rawCount: elements.length, timestamp: Date.now(), cachedLat: lat, cachedLng: lng,
       }));
     } catch { /* ignore */ }
 
-    return stores;
-  } catch {
-    return [];
+    return result;
+  } catch (err) {
+    console.error("[store-locator] Overpass query failed:", err);
+    return { stores: [], rawCount: 0, error: err instanceof Error ? err.message : "Ukjent feil ved henting av butikker" };
   }
 }
 

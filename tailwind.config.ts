@@ -6,13 +6,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#0f1117",
+        background: "#111318",
         surface: "#181b23",
         "surface-hover": "#1f2330",
         border: "#2a2f3d",
-        primary: "#22c55e",
+        primary: "#34d399",
         "primary-hover": "#16a34a",
-        "text-muted": "#8b8fa3",
+        "text-muted": "#9298ad",
       },
       borderRadius: {
         card: "16px",
